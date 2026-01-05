@@ -21,8 +21,9 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
+            const db = getFirestore(app);
 
+        // Global hale getiriyoruz ki her yerden erişelim
         window.auth = auth; window.db = db;
         window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
         window.signInWithEmailAndPassword = signInWithEmailAndPassword;
@@ -30,6 +31,7 @@
         window.collection = collection; window.serverTimestamp = serverTimestamp;
         window.query = query; window.where = where;
         window.getDocs = getDocs; window.orderBy = orderBy;
+        window.onAuthStateChanged = onAuthStateChanged;
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -61,9 +63,7 @@
         </div>
 
         <div id="authStatus" class="flex items-center gap-4">
-            <button onclick="toggleModal('loginModal')" class="text-[10px] font-bold text-gray-400 hover:text-white uppercase">Giriş</button>
-            <button onclick="toggleModal('registerModal')" class="bg-white/5 border border-white/10 px-6 py-2 rounded-full text-[10px] font-bold text-white hover:bg-[#39FF14] hover:text-black transition-all uppercase">Kayıt</button>
-        </div>
+            </div>
     </nav>
 
     <main id="factory" class="max-w-5xl mx-auto text-center pt-20 pb-32 px-6">
@@ -84,15 +84,15 @@
             </div>
         </div>
 
-        <div id="sonucAlani" class="hidden text-left animate-pulse">
-            <div class="glass p-10 rounded-[40px] border border-[#39FF14]/30">
+        <div id="sonucAlani" class="hidden text-left mb-20">
+            <div class="glass p-10 rounded-[40px] border border-[#39FF14]/30 bg-[#39FF14]/5">
                 <p id="finalPromptText" class="text-xl text-gray-200 italic font-light leading-relaxed mb-8"></p>
-                <button onclick="copyToClipboard()" class="w-full bg-white text-black py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-[#39FF14] transition-all">Sonucu Kopyala</button>
+                <button onclick="copyToClipboard()" class="w-full bg-white text-black py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-[#39FF14] transition-all shadow-lg shadow-white/5">Sonucu Kopyala</button>
             </div>
         </div>
 
         <div id="historySection" class="hidden mt-20 text-left">
-            <h3 class="text-2xl font-black italic mb-8 neon-text uppercase">Üretim Geçmişim</h3>
+            <h3 class="text-2xl font-black italic mb-8 neon-text uppercase tracking-widest">Üretim Geçmişim</h3>
             <div id="historyList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </div>
     </main>
@@ -102,29 +102,8 @@
             <h2 class="text-4xl font-black italic mb-10 uppercase neon-text">Biz Kimiz?</h2>
             <p class="text-gray-400 text-lg leading-relaxed font-light">
                 AIPROMPTS.COM.TR, <span class="text-white font-bold italic">Bekir Kökmen</span> tarafından vizyoner bir proje olarak hayata geçirildi. 
-                Amacımız, karmaşık yapay zeka komutlarını herkes için erişilebilir, hızlı ve profesyonel hale getirmektir. 
-                Geleceğin finans ve sanat dünyasını yapay zeka ile birleştiriyoruz.
+                Amacımız, karmaşık yapay zeka komutlarını herkes için erişilebilir hale getirmektir.
             </p>
-        </div>
-    </section>
-
-    <section class="py-32 px-6">
-        <div class="max-w-6xl mx-auto">
-            <h3 class="text-2xl font-black italic mb-12 uppercase text-center">İlham Al</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="glass p-8 rounded-3xl">
-                    <div class="text-[#39FF14] font-bold mb-4 uppercase text-xs">Visual Art</div>
-                    <p class="text-gray-500 italic text-sm italic font-light leading-relaxed">"Cyberpunk İstanbul temalı, yağmurlu bir gece, Galata kulesi neon ışıklar altında, 8k, sinematik..."</p>
-                </div>
-                <div class="glass p-8 rounded-3xl">
-                    <div class="text-[#39FF14] font-bold mb-4 uppercase text-xs">Finance</div>
-                    <p class="text-gray-500 italic text-sm italic font-light leading-relaxed">"2026 yılı teknoloji hisseleri için risk analizi yap, portföy dağılımı önerileri sun..."</p>
-                </div>
-                <div class="glass p-8 rounded-3xl">
-                    <div class="text-[#39FF14] font-bold mb-4 uppercase text-xs">Development</div>
-                    <p class="text-gray-500 italic text-sm italic font-light leading-relaxed">"Firebase ile çalışan, Tailwind CSS kullanan modern bir login sayfası kodu hazırla..."</p>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -132,27 +111,23 @@
         <div class="max-w-4xl mx-auto text-center">
             <h2 class="text-4xl font-black italic mb-10 uppercase neon-text">İletişim</h2>
             <div class="glass p-12 rounded-[40px]">
-                <p class="text-2xl font-light mb-6">İş birliği ve soruların için bize ulaş kanka:</p>
+                <p class="text-2xl font-light mb-6">Soruların için:</p>
                 <a href="mailto:ebubekirkkmn@gmail.com" class="text-3xl font-black hover:text-[#39FF14] transition-all">ebubekirkkmn@gmail.com</a>
-                <div class="mt-10 text-gray-500 tracking-[0.3em] uppercase text-[10px]">Gaziantep / Türkiye</div>
             </div>
         </div>
     </section>
 
     <footer class="py-20 text-center border-t border-white/5 opacity-40">
-        <div class="text-[10px] uppercase tracking-[0.6em] mb-4">AIPROMPTS.COM.TR // THE FUTURE IS NOW</div>
-        <div class="font-black italic text-sm tracking-widest text-white">DESIGNED & DEVELOPED BY BEKIR KOKMEN</div>
+        <div class="font-black italic text-sm tracking-widest text-white uppercase">DESIGNED & DEVELOPED BY BEKIR KOKMEN</div>
     </footer>
 
     <div id="loginModal" class="modal">
         <div class="glass max-w-md w-full p-10 rounded-[40px] text-center relative">
             <button onclick="toggleModal('loginModal')" class="absolute top-6 right-8 text-2xl text-gray-500 hover:text-white">&times;</button>
             <h2 class="text-2xl font-black neon-text mb-8 italic uppercase">Giriş</h2>
-            <div class="space-y-4">
-                <input type="email" id="loginEmail" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-[#39FF14]" placeholder="E-Posta">
-                <input type="password" id="loginPass" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-[#39FF14]" placeholder="Şifre">
-                <button onclick="handleLogin()" class="w-full bg-[#39FF14] text-black font-black py-4 rounded-xl uppercase tracking-widest">Giriş Yap</button>
-            </div>
+            <input type="email" id="loginEmail" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-4 outline-none" placeholder="E-Posta">
+            <input type="password" id="loginPass" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-6 outline-none" placeholder="Şifre">
+            <button onclick="handleLogin()" class="w-full bg-[#39FF14] text-black font-black py-4 rounded-xl uppercase">Giriş Yap</button>
         </div>
     </div>
 
@@ -160,11 +135,9 @@
         <div class="glass max-w-md w-full p-10 rounded-[40px] text-center relative">
             <button onclick="toggleModal('registerModal')" class="absolute top-6 right-8 text-2xl text-gray-500 hover:text-white">&times;</button>
             <h2 class="text-2xl font-black neon-text mb-8 italic uppercase">Kayıt</h2>
-            <div class="space-y-4">
-                <input type="email" id="regEmail" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-[#39FF14]" placeholder="E-Posta">
-                <input type="password" id="regPass" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-[#39FF14]" placeholder="Şifre">
-                <button onclick="handleRegister()" class="w-full bg-[#39FF14] text-black font-black py-4 rounded-xl uppercase tracking-widest">Kayıt Ol</button>
-            </div>
+            <input type="email" id="regEmail" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-4 outline-none" placeholder="E-Posta">
+            <input type="password" id="regPass" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-6 outline-none" placeholder="Şifre">
+            <button onclick="handleRegister()" class="w-full bg-[#39FF14] text-black font-black py-4 rounded-xl uppercase">Kayıt Ol</button>
         </div>
     </div>
 
@@ -172,71 +145,103 @@
         let currentCategory = 'visual';
 
         function toggleModal(id) { document.getElementById(id).classList.toggle('active'); }
+        
         function setCategory(cat, btn) {
             currentCategory = cat;
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
 
+        // AUTH İŞLEMLERİ
         async function handleRegister() {
             const email = document.getElementById('regEmail').value;
             const pass = document.getElementById('regPass').value;
-            try { await window.createUserWithEmailAndPassword(window.auth, email, pass); location.reload(); } catch (e) { alert(e.message); }
+            try { 
+                await window.createUserWithEmailAndPassword(window.auth, email, pass); 
+                alert("Hoş geldin kanka! Kayıt başarılı.");
+                location.reload(); 
+            } catch (e) { alert("Hata: " + e.message); }
         }
 
         async function handleLogin() {
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPass').value;
-            try { await window.signInWithEmailAndPassword(window.auth, email, pass); location.reload(); } catch (e) { alert(e.message); }
+            try { 
+                await window.signInWithEmailAndPassword(window.auth, email, pass); 
+                location.reload(); 
+            } catch (e) { alert("Giriş başarısız: " + e.message); }
         }
 
-        function handleLogout() { window.signOut(window.auth).then(() => location.reload()); }
+        function handleLogout() { 
+            window.signOut(window.auth).then(() => location.reload()); 
+        }
 
+        // OTURUM TAKİBİ
         window.addEventListener('load', () => {
             setTimeout(() => {
                 window.onAuthStateChanged(window.auth, (user) => {
+                    const authStatus = document.getElementById('authStatus');
+                    const historySection = document.getElementById('historySection');
+                    
                     if (user) {
-                        document.getElementById('authStatus').innerHTML = `<button onclick="handleLogout()" class="text-[10px] font-bold text-red-500 uppercase border border-red-500/20 px-4 py-2 rounded-full hover:bg-red-500 hover:text-white transition-all">Çıkış</button>`;
-                        document.getElementById('historySection').classList.remove('hidden');
+                        authStatus.innerHTML = `
+                            <span class="text-[10px] text-[#39FF14] font-bold border-r border-white/10 pr-4">${user.email.split('@')[0]}</span>
+                            <button onclick="handleLogout()" class="text-[10px] font-bold text-red-500 uppercase hover:text-white transition-all">Çıkış</button>
+                        `;
+                        historySection.classList.remove('hidden');
                         loadHistory(user.uid);
+                    } else {
+                        authStatus.innerHTML = `
+                            <button onclick="toggleModal('loginModal')" class="text-[10px] font-bold text-gray-400 hover:text-white uppercase">Giriş</button>
+                            <button onclick="toggleModal('registerModal')" class="bg-white/5 border border-white/10 px-6 py-2 rounded-full text-[10px] font-bold text-white hover:bg-[#39FF14] hover:text-black transition-all uppercase">Kayıt</button>
+                        `;
                     }
                 });
             }, 1000);
         });
 
+        // PROMPT ÜRETME VE KAYDETME
         async function generateSuperPrompt() {
             const input = document.getElementById('userInput').value;
             if(!input) return;
 
             let final = "";
-            if(currentCategory === 'visual') final = `MIDJOURNEY MASTER: ${input}, hyper-realistic, photorealistic, 8k, cinematic lighting, shot on 35mm lens --v 6.0`;
-            else if(currentCategory === 'finance') final = `SENIOR ECONOMIST: ${input}. Provide a detailed financial analysis, including risk assessment and future projections.`;
-            else final = `SOFTWARE ARCHITECT: ${input}. Provide high-performance, clean code solution with detailed comments.`;
+            if(currentCategory === 'visual') final = `MIDJOURNEY: ${input}, hyper-realistic, 8k, cinematic --v 6.0`;
+            else if(currentCategory === 'finance') final = `FINANCE EXPERT: Analyze ${input}. Provide risk score and strategy.`;
+            else final = `DEV MODE: Write optimized code for ${input} with documentation.`;
 
             document.getElementById('finalPromptText').innerText = final;
             document.getElementById('sonucAlani').classList.remove('hidden');
 
             const user = window.auth.currentUser;
             if(user) {
-                await window.addDoc(window.collection(window.db, "prompts"), {
-                    uid: user.uid, input: input, output: final, category: currentCategory, createdAt: window.serverTimestamp()
-                });
-                loadHistory(user.uid);
+                try {
+                    await window.addDoc(window.collection(window.db, "prompts"), {
+                        uid: user.uid, 
+                        input: input, 
+                        output: final, 
+                        category: currentCategory, 
+                        createdAt: window.serverTimestamp()
+                    });
+                    loadHistory(user.uid);
+                } catch (e) { console.error("Veri kaydedilemedi: ", e); }
             }
         }
 
         async function loadHistory(uid) {
-            const q = window.query(window.collection(window.db, "prompts"), window.where("uid", "==", uid), window.orderBy("createdAt", "desc"));
-            const snap = await window.getDocs(q);
-            const list = document.getElementById('historyList');
-            list.innerHTML = "";
-            snap.forEach(doc => {
-                const d = doc.data();
-                const div = document.createElement('div');
-                div.className = "glass p-6 rounded-3xl border border-white/5";
-                div.innerHTML = `<div class="text-[#39FF14] font-black uppercase text-[10px] mb-2">${d.category}</div><div class="text-gray-300 text-sm font-light italic leading-relaxed">"${d.output}"</div>`;
-                list.appendChild(div);
-            });
+            try {
+                const q = window.query(window.collection(window.db, "prompts"), window.where("uid", "==", uid), window.orderBy("createdAt", "desc"));
+                const snap = await window.getDocs(q);
+                const list = document.getElementById('historyList');
+                list.innerHTML = "";
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    const div = document.createElement('div');
+                    div.className = "glass p-6 rounded-3xl border border-white/5 hover:border-[#39FF14]/20 transition-all";
+                    div.innerHTML = `<div class="text-[#39FF14] font-black uppercase text-[10px] mb-2">${d.category}</div><div class="text-gray-300 text-sm font-light italic">"${d.output}"</div>`;
+                    list.appendChild(div);
+                });
+            } catch (e) { console.log("Geçmiş yüklenemedi (Kurallar kapalı olabilir)"); }
         }
 
         function copyToClipboard() {
