@@ -74,13 +74,14 @@
 
         <div class="flex flex-wrap justify-center gap-4 mb-10">
             <button onclick="setCategory('visual', this)" class="category-btn active px-8 py-4 rounded-2xl text-[10px] uppercase font-bold tracking-widest">Visual Art</button>
+            <button onclick="setCategory('video', this)" class="category-btn px-8 py-4 rounded-2xl text-[10px] uppercase font-bold tracking-widest">Video Prompt</button>
             <button onclick="setCategory('finance', this)" class="category-btn px-8 py-4 rounded-2xl text-[10px] uppercase font-bold tracking-widest">Finance</button>
             <button onclick="setCategory('code', this)" class="category-btn px-8 py-4 rounded-2xl text-[10px] uppercase font-bold tracking-widest">Dev Mode</button>
         </div>
 
         <div class="glass p-2 rounded-[45px] shadow-3xl mb-10 border-[#39FF14]/10">
             <div class="bg-[#080808] rounded-[43px] p-8 md:p-12">
-                <textarea id="userInput" placeholder="Aklındaki fikri buraya dök kanka..." class="w-full bg-transparent text-2xl font-light text-white outline-none h-40 resize-none placeholder:text-gray-800 focus:placeholder:opacity-0 transition-all"></textarea>
+                <textarea id="userInput" placeholder="Aklındaki fikri buraya dök kanka... 'Beni bir kulübe ışınla' veya 'BMW M4 uçsun' gibi..." class="w-full bg-transparent text-2xl font-light text-white outline-none h-40 resize-none placeholder:text-gray-800 focus:placeholder:opacity-0 transition-all"></textarea>
                 <button id="mainActionBtn" onclick="generateSuperPrompt()" class="w-full mt-8 bg-[#39FF14] text-black font-black py-6 rounded-2xl hover:scale-[1.01] active:scale-95 transition-all uppercase tracking-[0.2em] text-xl">Sistemi Çalıştır →</button>
             </div>
         </div>
@@ -107,15 +108,15 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="glass p-8 rounded-3xl border border-white/5 hover:border-[#39FF14]/30 transition-all group">
                     <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Visual Art</div>
-                    <p class="text-gray-400 italic text-sm font-light leading-relaxed group-hover:text-white transition-colors">"Cyberpunk İstanbul, Galata kulesi neon ışıklar altında, 8k, sinematik --v 6.1"</p>
+                    <p class="text-gray-400 italic text-sm font-light leading-relaxed group-hover:text-white transition-colors">"Kendi fotoğrafını kulübe ışınla, neonlar altında, ultra gerçekçi, 8k --v 6.1"</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-[#39FF14]/30 transition-all group">
+                    <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Video Prompt</div>
+                    <p class="text-gray-400 italic text-sm font-light leading-relaxed group-hover:text-white transition-colors">"Uçan BMW M4, dinamik kamera hareketleri, sinematik, 4K, 15fps"</p>
                 </div>
                 <div class="glass p-8 rounded-3xl border border-white/5 hover:border-[#39FF14]/30 transition-all group">
                     <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Finance</div>
                     <p class="text-gray-400 italic text-sm font-light leading-relaxed group-hover:text-white transition-colors">"2026 teknoloji piyasası risk analizi yap, portföy önerisi sun."</p>
-                </div>
-                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-[#39FF14]/30 transition-all group">
-                    <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Dev Mode</div>
-                    <p class="text-gray-400 italic text-sm font-light leading-relaxed group-hover:text-white transition-colors">"Firebase ile çalışan modern bir login sayfası Tailwind kodu hazırla."</p>
                 </div>
             </div>
         </div>
@@ -205,7 +206,13 @@
             btn.disabled = true;
 
             if(currentCategory === 'visual') {
-                final = `[MIDJOURNEY v6.1]: A high-end professional photographic masterpiece of ${input}, shot on Sony A7R IV, 85mm f/1.8 lens, cinematic lighting, hyper-realistic textures, 8k resolution, ray tracing, volumetric fog, Unreal Engine 5 render style --ar 16:9 --v 6.1 --stylize 400`;
+                // KANKA: Kişi yerleştirme için promptu güncelledik!
+                // Artık bu promptu ve senin fotoğraf linkini Midjourney'e attığında seni daha iyi algılayacak.
+                // ÖNEMLİ: Bu promptu Midjourney'e atarken, başına kendi fotoğrafının URL'sini koymalısın: [SENİN_FOTO_URL] [BU_PROMPT]
+                final = `[MIDJOURNEY v6.1 IMAGE PROMPT]: A high-end professional photographic masterpiece featuring a person resembling the provided image, placed within the context of "${input}". Cinematic lighting, shot on Sony A7R IV, 85mm f/1.8 lens, hyper-realistic textures, 8k resolution, ray tracing, volumetric fog, Unreal Engine 5 render style. Emphasize realistic integration of the person into the scene. --ar 16:9 --v 6.1 --iw 1.2 --stylize 400`;
+            } else if(currentCategory === 'video') {
+                // YENİ: Video Prompt kategorisi eklendi
+                final = `[VIDEO PROMPT - RUNWAYML / PIKA LABS]: Generate a hyper-realistic cinematic video of "${input}". Dynamic camera movements, smooth transitions, high-fidelity visuals, 4K resolution, 15fps. Emphasize motion blur and depth of field. Looping video, seamless loop. [Vision: Bekir Kokmen Film Production]`;
             } else if(currentCategory === 'finance') {
                 final = `[FINANCE ANALYST]: Act as a senior financial strategist. Provide a comprehensive market overview for ${input}. Analyze 2026 trends, potential risk factors, historical performance data, and strategic portfolio recommendations for long-term growth. [Vision: Bekir Kokmen Finance Production]`;
             } else {
@@ -249,6 +256,10 @@
                     list.appendChild(div);
                 });
             } catch (e) { console.error(e); }
+            finally {
+                // historySection'ı göster, eğer Firebase boş gelse bile
+                document.getElementById('historySection').classList.remove('hidden');
+            }
         }
 
         function copyToClipboard() { 
