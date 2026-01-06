@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1NHW1YZ5EG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-1NHW1YZ5EG');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI PROMPT STUDIO | AIPROMPTS.COM.TR</title>
@@ -172,36 +180,28 @@
             if(!input) return alert("Boş bırakma kanka!");
 
             let final = "";
-            let styleDetails = "Professional high-end photography, Sony A7R IV, cinematic lighting, 8k resolution";
+            let styleDetails = "Professional photography, 8k, cinematic lighting";
             
-            // Renk ve Stil Algılama
             const styles = {
-                "mavi": "Cool blue color palette, azure ambient lighting",
-                "kırmızı": "Deep red accents, crimson glow, warm contrast",
-                "yeşil": "Emerald green tones, forest lighting",
-                "mor": "Neon purple glow, synthwave aesthetic",
-                "kahverengi": "Warm earthy tones, deep brown color grading",
-                "nostaljik": "Nostalgic 1990s aesthetic, vintage 35mm film grain, Kodak Portra 400",
-                "modifiye": "Aggressive body kit, lowered stance, custom aftermarket rims, performance tuning"
+                "mavi": "Cool blue palette", "kırmızı": "Crimson lighting", "nostaljik": "1990s film grain, Kodak Portra",
+                "modifiye": "Aggressive body kit, custom rims, street racing style"
             };
 
-            for (let s in styles) { if(lowInput.includes(s)) { styleDetails = styles[s] + ", 8k resolution, highly detailed"; break; } }
+            for (let s in styles) { if(lowInput.includes(s)) { styleDetails = styles[s]; break; } }
 
             const btn = document.getElementById('mainActionBtn');
-            btn.innerText = "YAPAY ZEKA ANALİZ EDİYOR...";
+            btn.innerText = "İŞLENİYOR...";
 
             if(currentCategory === 'visual') {
-                if(lowInput.includes("beni") || lowInput.includes("benim") || lowInput.includes("me")) {
-                    final = `[FACIAL MODE]: Using the attached photo as a character reference, place the person into a ${styleDetails} scene of "${input}". Maintain facial identity perfectly --v 6.1 --iw 1.2 --cw 100`;
-                } else if(lowInput.includes("modifiye")) {
-                    final = `[CAR MOD MODE]: Using the attached car photo as a base, apply ${styleDetails} and modifications. Keep core design but enhance parts --v 6.1 --iw 1.5`;
+                if(lowInput.includes("beni") || lowInput.includes("benim")) {
+                    final = `[FACIAL]: Using photo as ref, place person in ${input}, ${styleDetails} --v 6.1 --cw 100`;
                 } else {
-                    final = `[MIDJOURNEY v6.1]: A professional masterpiece of ${input}, ${styleDetails}, NO PEOPLE in frame, ray tracing, cinematic shadows --ar 16:9 --v 6.1 --stylize 400`;
+                    final = `[MJ v6.1]: ${input}, ${styleDetails}, masterpiece --ar 16:9 --v 6.1`;
                 }
             } else if(currentCategory === 'video') {
-                final = `[VIDEO ENGINE]: Cinematic 4K video of ${input}, style: ${styleDetails}, dynamic motion, 24fps. Optimized for Runway Gen-3.`;
+                final = `[VIDEO]: 4K ${input}, ${styleDetails}, cinematic motion.`;
             } else {
-                final = `[FINANCE]: Deep market analysis for ${input}. 2026 projections, risk assessment and strategic advice. [Vision: Bekir Kokmen Finance]`;
+                final = `[FINANCE]: Strategic analysis for ${input}. 2026 Projections by Bekir Kokmen.`;
             }
 
             setTimeout(async () => {
@@ -213,7 +213,6 @@
                     await window.addDoc(window.collection(window.db, "prompts"), { uid: user.uid, input, output: final, category: currentCategory, createdAt: window.serverTimestamp() });
                     loadHistory(user.uid);
                 }
-                window.scrollTo({ top: document.getElementById('sonucAlani').offsetTop - 100, behavior: 'smooth' });
             }, 800);
         }
 
