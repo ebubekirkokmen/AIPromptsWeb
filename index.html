@@ -34,23 +34,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root { --neon: #39FF14; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #030303; color: #ffffff; scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #030303; color: #ffffff; scroll-behavior: smooth; overflow-x: hidden; }
         .neon-text { color: var(--neon); text-shadow: 0 0 20px rgba(57, 255, 20, 0.4); }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .grid-bg { background-image: radial-gradient(rgba(57, 255, 20, 0.1) 1px, transparent 0); background-size: 40px 40px; }
         .category-btn { transition: all 0.4s; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; }
         .category-btn.active { background: var(--neon); color: #000; font-weight: 800; border-color: var(--neon); }
+        
+        @keyframes scrollText { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+        .trend-bar { white-space: nowrap; animation: scrollText 25s linear infinite; }
+        
         .modal { transition: opacity 0.3s, visibility 0.3s; opacity: 0; visibility: hidden; position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); }
         .modal.active { opacity: 1; visibility: visible; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #030303; }
-        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--neon); }
     </style>
 </head>
 <body class="grid-bg">
 
-    <nav class="max-w-7xl mx-auto flex justify-between items-center py-8 px-6 sticky top-0 z-50 bg-black/50 backdrop-blur-lg">
+    <div class="w-full bg-[#39FF14]/10 border-y border-[#39FF14]/20 py-2 overflow-hidden sticky top-0 z-[60] backdrop-blur-md">
+        <div class="trend-bar flex gap-12 text-[10px] font-black uppercase tracking-[0.2em] italic text-[#39FF14]">
+            <span>🔥 TREND: NOSTALJIK BMW M3</span>
+            <span>🚀 TREND: CYBERPUNK ISTANBUL 2077</span>
+            <span>📸 TREND: 35MM FILM PORTRAIT</span>
+            <span>⚡ TREND: MODIFIED GTR R35</span>
+            <span>💸 TREND: FINANCE MARKET ANALYSIS 2026</span>
+        </div>
+    </div>
+
+    <nav class="max-w-7xl mx-auto flex justify-between items-center py-8 px-6 sticky top-[38px] z-50 bg-black/50 backdrop-blur-lg">
         <div class="flex flex-col cursor-pointer" onclick="window.scrollTo(0,0)">
             <span class="text-2xl font-extrabold italic tracking-tighter neon-text">AIPROMPTS.COM.TR</span>
             <span class="text-[9px] tracking-[0.4em] text-gray-500 uppercase mt-1 italic">Bekir Kökmen Production</span>
@@ -99,15 +109,15 @@
         <div class="max-w-6xl mx-auto">
             <h3 class="text-3xl font-black italic mb-12 uppercase text-center neon-text tracking-widest">İlham Al</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-[#39FF14]/30 transition-all">
+                <div class="glass p-8 rounded-3xl border border-white/5">
                     <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Visual Art</div>
                     <p class="text-gray-400 italic text-sm font-light">"Nostaljik bir sokakta mavi modifiyeli Nissan GTR, 35mm film grain."</p>
                 </div>
-                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-[#39FF14]/30 transition-all">
+                <div class="glass p-8 rounded-3xl border border-white/5">
                     <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Video Prompt</div>
                     <p class="text-gray-400 italic text-sm font-light">"Bulutların üzerinde uçan BMW M4, sinematik kamera geçişleri."</p>
                 </div>
-                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-[#39FF14]/30 transition-all">
+                <div class="glass p-8 rounded-3xl border border-white/5">
                     <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Finance</div>
                     <p class="text-gray-400 italic text-sm font-light">"2026 teknoloji hisseleri için risk analizi ve büyüme projeksiyonu."</p>
                 </div>
@@ -120,10 +130,7 @@
             <h2 class="text-4xl font-black italic mb-10 uppercase neon-text tracking-widest">Biz Kimiz?</h2>
             <div class="glass p-12 rounded-[50px] border-white/5">
                 <p class="text-gray-300 text-lg leading-relaxed font-light mb-6">
-                    AIPROMPTS.COM.TR, <span class="text-white font-bold italic">Bekir Kökmen</span> tarafından geleceğin yaratıcı araçlarını bugünden inşa etmek için tasarlandı.
-                </p>
-                <p class="text-gray-400 text-sm leading-relaxed">
-                    Sıradan fikirleri, yapay zekanın anlayacağı en derin dilde profesyonel komutlara dönüştürüyoruz. Sanat, finans ve video dünyasında AI gücünü yanınıza alın.
+                    AIPROMPTS.COM.TR, <span class="text-white font-bold italic">Bekir Kökmen</span> tarafından geleceğin yaratıcı araçlarını inşa etmek için tasarlandı.
                 </p>
             </div>
         </div>
@@ -132,11 +139,10 @@
     <section id="contact" class="py-32 px-6 border-t border-white/5">
         <div class="max-w-4xl mx-auto text-center">
             <h2 class="text-4xl font-black italic mb-10 uppercase neon-text tracking-widest">İletişim</h2>
-            <div class="glass p-12 rounded-[50px] border-white/5 hover:border-[#39FF14]/20 transition-all">
-                <p class="text-xl font-light mb-8 text-gray-400 uppercase tracking-tighter italic">İş birliği ve Projeler için:</p>
+            <div class="glass p-12 rounded-[50px] border-white/5">
+                <p class="text-xl font-light mb-8 text-gray-400 uppercase tracking-tighter italic">İş birliği için:</p>
                 <div class="flex flex-col gap-6">
                     <a href="tel:+905362048727" class="text-3xl md:text-5xl font-black hover:text-[#39FF14] transition-all italic tracking-tighter">0536 204 87 27</a>
-                    <div class="h-[1px] w-12 bg-white/10 mx-auto"></div>
                     <a href="mailto:ebubekirkkmn@gmail.com" class="text-xl md:text-2xl font-bold text-gray-300 hover:text-[#39FF14] transition-all italic tracking-tighter">ebubekirkkmn@gmail.com</a>
                 </div>
             </div>
@@ -144,7 +150,7 @@
     </section>
 
     <footer class="py-20 text-center border-t border-white/5 opacity-40">
-        <div class="font-black italic text-[10px] tracking-[0.5em] text-white uppercase">DESIGNED & DEVELOPED BY BEKIR KOKMEN © 2026</div>
+        <div class="font-black italic text-[10px] tracking-[0.5em] text-white uppercase">DESIGNED BY BEKIR KOKMEN © 2026</div>
     </footer>
 
     <div id="loginModal" class="modal"><div class="glass p-10 rounded-[40px] w-full max-w-md text-center"><h2 class="neon-text font-black mb-6 uppercase">Giriş Yap</h2><input type="email" id="lEmail" class="w-full bg-white/5 p-4 rounded-xl mb-4 text-white outline-none" placeholder="E-posta"><input type="password" id="lPass" class="w-full bg-white/5 p-4 rounded-xl mb-6 text-white outline-none" placeholder="Şifre"><button onclick="handleLogin()" class="w-full bg-[#39FF14] text-black font-black py-4 rounded-xl uppercase">Bağlan</button><button onclick="toggleModal('loginModal')" class="mt-4 text-gray-500 text-sm">Kapat</button></div></div>
@@ -152,6 +158,7 @@
 
     <script>
         let currentCategory = 'visual';
+
         function toggleModal(id) { document.getElementById(id).classList.toggle('active'); }
         function setCategory(cat, btn) {
             currentCategory = cat;
@@ -165,42 +172,36 @@
             if(!input) return alert("Boş bırakma kanka!");
 
             let final = "";
-            let styleDetails = "Professional high-end photography, shot on Sony A7R IV, 85mm f/1.8 lens, cinematic lighting, 8k resolution";
+            let styleDetails = "Professional high-end photography, Sony A7R IV, cinematic lighting, 8k resolution";
             
-            if(lowInput.includes("nostaljik") || lowInput.includes("eski")) {
-                styleDetails = "Nostalgic 1990s aesthetic, vintage 35mm film grain, Kodak Portra 400 style, cinematic shadows";
-            } else if(lowInput.includes("modifiye") || lowInput.includes("modify")) {
-                styleDetails = "Aggressive body kit, lowered stance, custom rims, widebody kit, performance tuning aesthetics";
-            } else {
-                const colors = {
-                    "mavi": "Cool blue color palette, azure ambient lighting",
-                    "kırmızı": "Deep red accents, crimson glow, warm high-contrast lighting",
-                    "yeşil": "Emerald green tones, forest ambient lighting",
-                    "sarı": "Golden hour lighting, amber tones",
-                    "mor": "Neon purple glow, synthwave color palette",
-                    "turuncu": "Sunset orange hues, warm fiery lighting",
-                    "kahverengi": "Warm earthy tones, deep brown color grading",
-                    "beyaz": "Clean minimal white aesthetic, high-key lighting",
-                    "siyah": "Dark noir aesthetic, deep shadows, high contrast"
-                };
-                for (let color in colors) { if(lowInput.includes(color)) { styleDetails = colors[color] + ", professional photography, 8k"; break; } }
-            }
+            // Renk ve Stil Algılama
+            const styles = {
+                "mavi": "Cool blue color palette, azure ambient lighting",
+                "kırmızı": "Deep red accents, crimson glow, warm contrast",
+                "yeşil": "Emerald green tones, forest lighting",
+                "mor": "Neon purple glow, synthwave aesthetic",
+                "kahverengi": "Warm earthy tones, deep brown color grading",
+                "nostaljik": "Nostalgic 1990s aesthetic, vintage 35mm film grain, Kodak Portra 400",
+                "modifiye": "Aggressive body kit, lowered stance, custom aftermarket rims, performance tuning"
+            };
+
+            for (let s in styles) { if(lowInput.includes(s)) { styleDetails = styles[s] + ", 8k resolution, highly detailed"; break; } }
 
             const btn = document.getElementById('mainActionBtn');
             btn.innerText = "YAPAY ZEKA ANALİZ EDİYOR...";
 
             if(currentCategory === 'visual') {
                 if(lowInput.includes("beni") || lowInput.includes("benim") || lowInput.includes("me")) {
-                    final = `[FACIAL INTEGRATION MODE]: Place person in photo into ${styleDetails} scene of "${input}". Maintain face identity perfectly --v 6.1 --iw 1.2 --cw 100`;
+                    final = `[FACIAL MODE]: Using the attached photo as a character reference, place the person into a ${styleDetails} scene of "${input}". Maintain facial identity perfectly --v 6.1 --iw 1.2 --cw 100`;
                 } else if(lowInput.includes("modifiye")) {
-                    final = `[CAR MODIFICATION MODE]: Apply ${styleDetails} to the car in photo. Realistic mods, pro automotive shot --v 6.1 --iw 1.5`;
+                    final = `[CAR MOD MODE]: Using the attached car photo as a base, apply ${styleDetails} and modifications. Keep core design but enhance parts --v 6.1 --iw 1.5`;
                 } else {
-                    final = `[MIDJOURNEY v6.1]: A high-end masterpiece of ${input}, ${styleDetails}, NO PEOPLE in frame, ray tracing --ar 16:9 --v 6.1 --stylize 400`;
+                    final = `[MIDJOURNEY v6.1]: A professional masterpiece of ${input}, ${styleDetails}, NO PEOPLE in frame, ray tracing, cinematic shadows --ar 16:9 --v 6.1 --stylize 400`;
                 }
             } else if(currentCategory === 'video') {
                 final = `[VIDEO ENGINE]: Cinematic 4K video of ${input}, style: ${styleDetails}, dynamic motion, 24fps. Optimized for Runway Gen-3.`;
-            } else if(currentCategory === 'finance') {
-                final = `[FINANCE STRATEGY]: Deep analysis for ${input}. Projections and strategic advice. [Vision: Bekir Kokmen Finance]`;
+            } else {
+                final = `[FINANCE]: Deep market analysis for ${input}. 2026 projections, risk assessment and strategic advice. [Vision: Bekir Kokmen Finance]`;
             }
 
             setTimeout(async () => {
@@ -212,6 +213,7 @@
                     await window.addDoc(window.collection(window.db, "prompts"), { uid: user.uid, input, output: final, category: currentCategory, createdAt: window.serverTimestamp() });
                     loadHistory(user.uid);
                 }
+                window.scrollTo({ top: document.getElementById('sonucAlani').offsetTop - 100, behavior: 'smooth' });
             }, 800);
         }
 
@@ -220,12 +222,12 @@
         function handleLogout() { window.signOut(window.auth).then(() => location.reload()); }
 
         window.addEventListener('load', () => {
-            const checkAuth = setInterval(() => {
-                if (window.auth) {
-                    clearInterval(checkAuth);
+            const check = setInterval(() => {
+                if(window.auth) {
+                    clearInterval(check);
                     window.onAuthStateChanged(window.auth, (user) => {
                         const status = document.getElementById('authStatus');
-                        if (user) {
+                        if(user) {
                             status.innerHTML = `<span class="text-[10px] neon-text uppercase mr-4">${user.email.split('@')[0]}</span><button onclick="handleLogout()" class="text-[10px] text-red-500 font-bold uppercase">Çıkış</button>`;
                             document.getElementById('historySection').classList.remove('hidden');
                             loadHistory(user.uid);
@@ -250,7 +252,6 @@
                 list.appendChild(div);
             });
         }
-
         function copyToClipboard() { navigator.clipboard.writeText(document.getElementById('finalPromptText').innerText); alert("Kopyalandı kanka!"); }
     </script>
 </body>
