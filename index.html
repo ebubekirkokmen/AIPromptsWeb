@@ -100,7 +100,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="glass p-8 rounded-3xl border hover:border-[#39FF14]/30 transition-all">
                     <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Visual Art</div>
-                    <p class="text-gray-400 italic text-sm font-light leading-relaxed">"Cyberpunk İstanbul, Galata kulesi neon ışıklar altında, 8k, sinematik --v 6.0"</p>
+                    <p class="text-gray-400 italic text-sm font-light leading-relaxed">"Cyberpunk İstanbul, Galata kulesi neon ışıklar altında, 8k, sinematik --v 6.1"</p>
                 </div>
                 <div class="glass p-8 rounded-3xl border hover:border-[#39FF14]/30 transition-all">
                     <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Finance</div>
@@ -197,15 +197,36 @@
             }, 1000);
         });
 
+        // KANKA MASTER PROMPT MOTORU BURASI
         async function generateSuperPrompt() {
             const input = document.getElementById('userInput').value;
             if(!input) return;
-            let final = (currentCategory === 'visual') ? `MIDJOURNEY: ${input}, hyper-realistic, 8k --v 6.0` : (currentCategory === 'finance') ? `FINANCE: Analyze ${input}` : `DEV: Code for ${input}`;
+            
+            let final = "";
+            
+            if(currentCategory === 'visual') {
+                // Midjourney Pro Modu
+                final = `[PROMPT]: A professional, high-end photography of ${input}, cinematic lighting, shot on Sony A7R IV, 85mm f/1.8 lens, hyper-realistic textures, 8k resolution, detailed atmosphere, ray tracing, unreal engine 5 render style --ar 16:9 --v 6.1 --stylize 250`;
+            } else if(currentCategory === 'finance') {
+                // Finans Analiz Modu
+                final = `[FINANCE ANALYTICS]: Act as a senior financial advisor. Provide a deep dive market analysis for ${input}. Include risk assessment, historical volatility, 2026 growth projections, and strategic portfolio recommendations.`;
+            } else {
+                // Dev Mode (Yazılım)
+                final = `[DEV MODE]: Act as a Senior Full-Stack Engineer. Provide clean, modular, and high-performance code for ${input}. Follow modern security standards, use industry-best practices (Firebase/Next.js/Tailwind), and include technical documentation.`;
+            }
+            
             document.getElementById('finalPromptText').innerText = final;
             document.getElementById('sonucAlani').classList.remove('hidden');
+            
             const user = window.auth.currentUser;
             if(user) {
-                await window.addDoc(window.collection(window.db, "prompts"), { uid: user.uid, input: input, output: final, category: currentCategory, createdAt: window.serverTimestamp() });
+                await window.addDoc(window.collection(window.db, "prompts"), { 
+                    uid: user.uid, 
+                    input: input, 
+                    output: final, 
+                    category: currentCategory, 
+                    createdAt: window.serverTimestamp() 
+                });
                 loadHistory(user.uid);
             }
         }
@@ -219,12 +240,4 @@
                 const d = doc.data();
                 const div = document.createElement('div');
                 div.className = "glass p-6 rounded-3xl border border-white/5";
-                div.innerHTML = `<div class="text-[#39FF14] font-black uppercase text-[10px] mb-2">${d.category}</div><div class="text-gray-300 text-sm italic">"${d.output}"</div>`;
-                list.appendChild(div);
-            });
-        }
-
-        function copyToClipboard() { navigator.clipboard.writeText(document.getElementById('finalPromptText').innerText); alert("Kopyalandı!"); }
-    </script>
-</body>
-</html>
+                div.innerHTML = `<div class="text-[#39FF14] font-black uppercase text-[10px] mb-2">${d.category}</div>
