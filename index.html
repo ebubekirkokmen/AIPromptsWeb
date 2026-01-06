@@ -23,7 +23,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Global erişim için bunları bağlıyoruz
         window.auth = auth; window.db = db;
         window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
         window.signInWithEmailAndPassword = signInWithEmailAndPassword;
@@ -46,18 +45,26 @@
         .category-btn.active { background: var(--neon); color: #000; font-weight: 800; border-color: var(--neon); }
         .modal { transition: opacity 0.3s, visibility 0.3s; opacity: 0; visibility: hidden; position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); }
         .modal.active { opacity: 1; visibility: visible; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #030303; }
+        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon); }
     </style>
 </head>
 <body class="grid-bg">
 
     <nav class="max-w-7xl mx-auto flex justify-between items-center py-8 px-6 sticky top-0 z-50 bg-black/50 backdrop-blur-lg">
-        <div class="flex flex-col cursor-pointer" onclick="window.location.reload()">
+        <div class="flex flex-col cursor-pointer" onclick="window.scrollTo(0,0)">
             <span class="text-2xl font-extrabold italic tracking-tighter neon-text">AIPROMPTS.COM.TR</span>
             <span class="text-[9px] tracking-[0.4em] text-gray-500 uppercase mt-1 italic">Bekir Kökmen Production</span>
         </div>
-        <div id="authStatus" class="flex items-center gap-4 min-h-[40px]">
-            <span class="text-gray-600 text-[10px]">Sistem Yükleniyor...</span>
+        <div class="hidden md:flex gap-8 text-[11px] uppercase tracking-widest font-bold text-gray-400">
+            <a href="#factory" class="hover:text-[#39FF14] transition-colors">Factory</a>
+            <a href="#examples" class="hover:text-[#39FF14] transition-colors">İlham Al</a>
+            <a href="#about" class="hover:text-[#39FF14] transition-colors">Hakkımızda</a>
+            <a href="#contact" class="hover:text-[#39FF14] transition-colors">İletişim</a>
         </div>
+        <div id="authStatus" class="flex items-center gap-4 min-h-[40px]"></div>
     </nav>
 
     <main id="factory" class="max-w-5xl mx-auto text-center pt-20 pb-32 px-6">
@@ -71,17 +78,20 @@
             <button onclick="setCategory('code', this)" class="category-btn px-8 py-4 rounded-2xl text-[10px] uppercase font-bold tracking-widest">Dev Mode</button>
         </div>
 
-        <div class="glass p-2 rounded-[45px] shadow-3xl mb-10">
+        <div class="glass p-2 rounded-[45px] shadow-3xl mb-10 border-[#39FF14]/10">
             <div class="bg-[#080808] rounded-[43px] p-8 md:p-12">
-                <textarea id="userInput" placeholder="Aklındaki fikri buraya dök kanka..." class="w-full bg-transparent text-2xl font-light text-white outline-none h-40 resize-none placeholder:text-gray-800"></textarea>
-                <button id="mainActionBtn" onclick="generateSuperPrompt()" class="w-full mt-8 bg-[#39FF14] text-black font-black py-6 rounded-2xl hover:scale-[1.01] transition-all uppercase tracking-[0.2em] text-xl">Sistemi Çalıştır →</button>
+                <textarea id="userInput" placeholder="Aklındaki fikri buraya dök kanka..." class="w-full bg-transparent text-2xl font-light text-white outline-none h-40 resize-none placeholder:text-gray-800 focus:placeholder:opacity-0 transition-all"></textarea>
+                <button id="mainActionBtn" onclick="generateSuperPrompt()" class="w-full mt-8 bg-[#39FF14] text-black font-black py-6 rounded-2xl hover:scale-[1.01] active:scale-95 transition-all uppercase tracking-[0.2em] text-xl">Sistemi Çalıştır →</button>
             </div>
         </div>
 
-        <div id="sonucAlani" class="hidden text-left mb-20">
-            <div class="glass p-10 rounded-[40px] border border-[#39FF14]/30 bg-[#39FF14]/5">
-                <p id="finalPromptText" class="text-xl text-gray-200 italic font-light leading-relaxed mb-8 font-mono bg-black/20 p-4 rounded-xl"></p>
-                <button onclick="copyToClipboard()" class="w-full bg-white text-black py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-[#39FF14] transition-all">Sonucu Kopyala</button>
+        <div id="sonucAlani" class="hidden text-left mb-20 animate-pulse">
+            <div class="glass p-10 rounded-[40px] border border-[#39FF14]/30 bg-[#39FF14]/5 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#39FF14" stroke-width="1"><path d="M12 2v20M2 12h20" /></svg>
+                </div>
+                <p id="finalPromptText" class="text-xl text-gray-200 italic font-light leading-relaxed mb-8 font-mono break-words"></p>
+                <button onclick="copyToClipboard()" class="w-full bg-white text-black py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-[#39FF14] hover:text-black transition-all shadow-xl shadow-white/5">Sonucu Kopyala</button>
             </div>
         </div>
 
@@ -91,30 +101,61 @@
         </div>
     </main>
 
-    <div id="loginModal" class="modal">
-        <div class="glass max-w-md w-full p-10 rounded-[40px] text-center relative">
-            <button onclick="toggleModal('loginModal')" class="absolute top-6 right-8 text-2xl text-gray-500 hover:text-white">&times;</button>
-            <h2 class="text-2xl font-black neon-text mb-8 italic uppercase">Giriş Yap</h2>
-            <input type="email" id="loginEmail" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-4 outline-none focus:border-[#39FF14]" placeholder="E-Posta">
-            <input type="password" id="loginPass" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-6 outline-none focus:border-[#39FF14]" placeholder="Şifre">
-            <button onclick="handleLogin()" class="w-full bg-[#39FF14] text-black font-black py-4 rounded-xl uppercase">Sisteme Bağlan</button>
+    <section id="examples" class="py-32 px-6 border-t border-white/5">
+        <div class="max-w-6xl mx-auto">
+            <h3 class="text-3xl font-black italic mb-12 uppercase text-center neon-text tracking-widest">İlham Al</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-[#39FF14]/30 transition-all group">
+                    <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Visual Art</div>
+                    <p class="text-gray-400 italic text-sm font-light leading-relaxed group-hover:text-white transition-colors">"Cyberpunk İstanbul, Galata kulesi neon ışıklar altında, 8k, sinematik --v 6.1"</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-[#39FF14]/30 transition-all group">
+                    <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Finance</div>
+                    <p class="text-gray-400 italic text-sm font-light leading-relaxed group-hover:text-white transition-colors">"2026 teknoloji piyasası risk analizi yap, portföy önerisi sun."</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border border-white/5 hover:border-[#39FF14]/30 transition-all group">
+                    <div class="text-[#39FF14] font-bold mb-4 uppercase text-[10px] tracking-widest">Dev Mode</div>
+                    <p class="text-gray-400 italic text-sm font-light leading-relaxed group-hover:text-white transition-colors">"Firebase ile çalışan modern bir login sayfası Tailwind kodu hazırla."</p>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <div id="registerModal" class="modal">
-        <div class="glass max-w-md w-full p-10 rounded-[40px] text-center relative">
-            <button onclick="toggleModal('registerModal')" class="absolute top-6 right-8 text-2xl text-gray-500 hover:text-white">&times;</button>
-            <h2 class="text-2xl font-black neon-text mb-8 italic uppercase">Yeni Üyelik</h2>
-            <input type="email" id="regEmail" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-4 outline-none focus:border-[#39FF14]" placeholder="E-Posta">
-            <input type="password" id="regPass" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-6 outline-none focus:border-[#39FF14]" placeholder="Şifre">
-            <button onclick="handleRegister()" class="w-full bg-[#39FF14] text-black font-black py-4 rounded-xl uppercase">Kayıt Ol</button>
+    <section id="about" class="py-32 px-6 border-t border-white/5 bg-[#050505]">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-black italic mb-10 uppercase neon-text tracking-widest">Biz Kimiz?</h2>
+            <div class="glass p-12 rounded-[50px] border-white/5">
+                <p class="text-gray-300 text-lg leading-relaxed font-light mb-6">
+                    AIPROMPTS.COM.TR, <span class="text-white font-bold italic">Bekir Kökmen</span> tarafından geleceğin yaratıcı araçlarını bugünden inşa etmek için tasarlandı.
+                </p>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Sıradan fikirleri, yapay zekanın anlayacağı en derin dilde profesyonel komutlara dönüştürüyoruz. Sanat, finans ve yazılım dünyasında AI gücünü yanınıza alın.
+                </p>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <section id="contact" class="py-32 px-6 border-t border-white/5">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-black italic mb-10 uppercase neon-text tracking-widest">İletişim</h2>
+            <div class="glass p-12 rounded-[50px] border-white/5 hover:border-[#39FF14]/20 transition-all">
+                <p class="text-2xl font-light mb-6 text-gray-400 uppercase tracking-tighter">İş birliği ve Projeler için:</p>
+                <a href="mailto:ebubekirkkmn@gmail.com" class="text-3xl md:text-5xl font-black hover:text-[#39FF14] transition-all break-words italic tracking-tighter">ebubekirkkmn@gmail.com</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-20 text-center border-t border-white/5 opacity-40">
+        <div class="font-black italic text-[10px] tracking-[0.5em] text-white uppercase">DESIGNED & DEVELOPED BY BEKIR KOKMEN</div>
+    </footer>
+
+    <div id="loginModal" class="modal"><div class="glass max-w-md w-full p-10 rounded-[40px] text-center relative"><button onclick="toggleModal('loginModal')" class="absolute top-6 right-8 text-2xl text-gray-500 hover:text-white">&times;</button><h2 class="text-2xl font-black neon-text mb-8 italic uppercase tracking-widest">Giriş Yap</h2><input type="email" id="loginEmail" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-4 outline-none focus:border-[#39FF14] transition-all" placeholder="E-Posta"><input type="password" id="loginPass" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-6 outline-none focus:border-[#39FF14] transition-all" placeholder="Şifre"><button onclick="handleLogin()" class="w-full bg-[#39FF14] text-black font-black py-4 rounded-xl uppercase tracking-widest shadow-lg shadow-[#39FF14]/20 hover:scale-[1.02] transition-all">Sisteme Bağlan</button></div></div>
+
+    <div id="registerModal" class="modal"><div class="glass max-w-md w-full p-10 rounded-[40px] text-center relative"><button onclick="toggleModal('registerModal')" class="absolute top-6 right-8 text-2xl text-gray-500 hover:text-white">&times;</button><h2 class="text-2xl font-black neon-text mb-8 italic uppercase tracking-widest">Yeni Üyelik</h2><input type="email" id="regEmail" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-4 outline-none focus:border-[#39FF14] transition-all" placeholder="E-Posta"><input type="password" id="regPass" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white mb-6 outline-none focus:border-[#39FF14] transition-all" placeholder="Şifre"><button onclick="handleRegister()" class="w-full bg-[#39FF14] text-black font-black py-4 rounded-xl uppercase tracking-widest shadow-lg shadow-[#39FF14]/20 hover:scale-[1.02] transition-all">Kayıt Ol</button></div></div>
 
     <script>
         let currentCategory = 'visual';
         function toggleModal(id) { document.getElementById(id).classList.toggle('active'); }
-        
         function setCategory(cat, btn) {
             currentCategory = cat;
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
@@ -135,7 +176,6 @@
 
         function handleLogout() { window.signOut(window.auth).then(() => location.reload()); }
 
-        // AUTH KONTROLÜ
         window.addEventListener('load', () => {
             const checkAuth = setInterval(() => {
                 if (window.auth) {
@@ -144,39 +184,32 @@
                         const authStatus = document.getElementById('authStatus');
                         const historySection = document.getElementById('historySection');
                         if (user) {
-                            authStatus.innerHTML = `
-                                <span class="text-[10px] text-[#39FF14] font-bold uppercase tracking-widest">${user.email.split('@')[0]}</span>
-                                <button onclick="handleLogout()" class="text-[10px] font-bold text-red-500 uppercase border border-red-500/30 px-3 py-1 rounded-lg">Çıkış</button>
-                            `;
+                            authStatus.innerHTML = `<span class="hidden md:inline text-[10px] text-gray-500 font-bold mr-2 tracking-widest uppercase">Operator:</span><span class="text-[10px] text-[#39FF14] font-bold mr-4 uppercase">${user.email.split('@')[0]}</span><button onclick="handleLogout()" class="text-[10px] font-bold text-red-500 uppercase border border-red-500/20 px-3 py-1 rounded-lg hover:bg-red-500 hover:text-white transition-all">Çıkış</button>`;
                             historySection.classList.remove('hidden');
                             loadHistory(user.uid);
                         } else {
-                            authStatus.innerHTML = `
-                                <button onclick="toggleModal('loginModal')" class="text-[10px] font-bold text-gray-400 hover:text-white uppercase">Giriş</button>
-                                <button onclick="toggleModal('registerModal')" class="bg-white/5 border border-white/10 px-6 py-2 rounded-full text-[10px] font-bold text-white hover:bg-[#39FF14] hover:text-black uppercase transition-all">Kayıt</button>
-                            `;
+                            authStatus.innerHTML = `<button onclick="toggleModal('loginModal')" class="text-[10px] font-bold text-gray-400 hover:text-white uppercase tracking-widest">Giriş</button><button onclick="toggleModal('registerModal')" class="bg-white/5 border border-white/10 px-6 py-2 rounded-full text-[10px] font-bold text-white hover:bg-[#39FF14] hover:text-black uppercase transition-all tracking-widest">Kayıt</button>`;
                         }
                     });
                 }
             }, 500);
         });
 
-        // PROMPT ÜRETİMİ
         async function generateSuperPrompt() {
             const input = document.getElementById('userInput').value;
-            if(!input) { alert("Önce bir şeyler yaz kanka!"); return; }
+            if(!input) { alert("Aklındaki fikri yaz kanka!"); return; }
             
             let final = "";
             const btn = document.getElementById('mainActionBtn');
-            btn.innerText = "İŞLENİYOR...";
+            btn.innerText = "YAPAY ZEKA ANALİZ EDİYOR...";
             btn.disabled = true;
 
             if(currentCategory === 'visual') {
-                final = `[MIDJOURNEY v6.1]: A high-end professional photographic masterpiece of ${input}, shot on Sony A7R IV, 85mm f/1.8 lens, cinematic lighting, hyper-realistic textures, 8k resolution, ray tracing, volumetric fog, Unreal Engine 5 style --ar 16:9 --v 6.1 --stylize 400`;
+                final = `[MIDJOURNEY v6.1]: A high-end professional photographic masterpiece of ${input}, shot on Sony A7R IV, 85mm f/1.8 lens, cinematic lighting, hyper-realistic textures, 8k resolution, ray tracing, volumetric fog, Unreal Engine 5 render style --ar 16:9 --v 6.1 --stylize 400`;
             } else if(currentCategory === 'finance') {
-                final = `[FINANCE ANALYST]: Strategic market analysis for ${input}. Include 2026 forecast, risk/reward ratios, historical volatility patterns, and portfolio optimization suggestions. [Vision: Bekir Kokmen Finance v1]`;
+                final = `[FINANCE ANALYST]: Act as a senior financial strategist. Provide a comprehensive market overview for ${input}. Analyze 2026 trends, potential risk factors, historical performance data, and strategic portfolio recommendations for long-term growth. [Vision: Bekir Kokmen Finance Production]`;
             } else {
-                final = `[DEV MODE]: Professional code implementation for ${input}. Optimized for performance, security, and scalability using modern frameworks (Next.js/Firebase/Tailwind).`;
+                final = `[DEV MODE]: Professional high-performance code architecture for ${input}. Focused on modularity, clean code principles, security best practices, and seamless integration with modern tech stacks like Firebase and Next.js.`;
             }
             
             setTimeout(async () => {
@@ -184,6 +217,7 @@
                 document.getElementById('sonucAlani').classList.remove('hidden');
                 btn.innerText = "SİSTEMİ ÇALIŞTIR →";
                 btn.disabled = false;
+                window.scrollTo({ top: document.getElementById('sonucAlani').offsetTop - 100, behavior: 'smooth' });
 
                 const user = window.auth.currentUser;
                 if(user) {
@@ -196,9 +230,9 @@
                             createdAt: window.serverTimestamp() 
                         });
                         loadHistory(user.uid);
-                    } catch (e) { console.error("Firestore hatası:", e); }
+                    } catch (e) { console.error(e); }
                 }
-            }, 800);
+            }, 1000);
         }
 
         async function loadHistory(uid) {
@@ -210,24 +244,16 @@
                 snap.forEach(doc => {
                     const d = doc.data();
                     const div = document.createElement('div');
-                    div.className = "glass p-6 rounded-3xl border border-white/5 hover:border-[#39FF14]/20 transition-all cursor-pointer";
-                    div.innerHTML = `
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-[#39FF14] font-black uppercase text-[9px] tracking-widest">${d.category}</span>
-                            <span class="text-[8px] text-gray-600">PRO</span>
-                        </div>
-                        <div class="text-gray-300 text-sm italic font-light">"${d.output}"</div>
-                    `;
+                    div.className = "glass p-6 rounded-3xl border border-white/5 hover:border-[#39FF14]/20 transition-all";
+                    div.innerHTML = `<div class="text-[#39FF14] font-black uppercase text-[9px] mb-3 tracking-widest">${d.category}</div><div class="text-gray-400 text-sm italic font-light leading-relaxed">"${d.output}"</div>`;
                     list.appendChild(div);
                 });
-            } catch (e) { console.error("Yükleme hatası:", e); }
+            } catch (e) { console.error(e); }
         }
 
         function copyToClipboard() { 
             const text = document.getElementById('finalPromptText').innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Kopyalandı kanka! Midjourney'e yapıştırabilirsin.");
-            });
+            navigator.clipboard.writeText(text).then(() => { alert("Kopyalandı kanka! Keyfine bak."); });
         }
     </script>
 </body>
